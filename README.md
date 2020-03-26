@@ -10,5 +10,5 @@ Features:
 - Routes are based on ScalaRoute.
 - Views are loading with passed params
 - Request/Response objects are functional. We can see each one's functionality in their respective classes.
- 
+
 
