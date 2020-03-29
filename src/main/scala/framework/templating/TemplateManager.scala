@@ -1,5 +1,7 @@
 package framework.templating
 
+import java.text.SimpleDateFormat
+
 import app.config.Config
 import framework.http.response.Response
 
@@ -9,7 +11,7 @@ import scala.reflect.io.File
 
 object TemplateManager {
 
-  def render(view: String, vars: Map[String, String] = Map()): Response = {
+  def render(view: String, vars: Map[String, Any] = Map()): Response = {
 
     val fullPath = Config.appViewsPath + view + ".html"
     val f = File(fullPath)
@@ -35,6 +37,9 @@ object TemplateManager {
           parts.foreach(part => {
             tpl = handlePipe(tpl, key, v, part.trim)
           })
+
+        } else if (target.contains(".")) {
+          tpl = handleDot(tpl, target.trim, v)
         }
       }
     })
@@ -42,11 +47,24 @@ object TemplateManager {
     Response(tpl, 200, Seq(("Content-Type", "text/html; charset=UTF-8")))
   }
 
-  def handlePipe(tpl: String, key: String, v: String, part: String): String = {
+  def handleDot(tpl: String, target: String, v: Any): String = {
+    val key = target.split("\\.").last
+
+    val rs = v.getClass.getDeclaredFields.map(f => {
+      f.setAccessible(true)
+      val r = (f.getName, f.get(v))
+      f.setAccessible(false)
+      r
+    })
+
+    rs.filter(_._1 == key).head._2.toString
+  }
+
+  def handlePipe(tpl: String, key: String, v: Any, part: String): String = {
     var tplUpdated = ""
 
     if (!part.contains("(")) {
-      val filterAppliedStr = applyFilter(v, part)
+      val filterAppliedStr = applyFilter(v.toString, part)
 
       val patternStr = "\\{\\s?+" + key + "\\|" + part + "\\s?+\\}"
       println(patternStr)
@@ -64,6 +82,14 @@ object TemplateManager {
 
     tplUpdated
   }
+
+  /*def applyTest(): Unit = {
+    val func = params.head
+    func match {
+      case "contains" =>
+        v.contains(params(1)).toString
+    }
+  }*/
 
   def applyFilter(v: String, func: String): String = {
 
@@ -83,49 +109,51 @@ object TemplateManager {
       case "trim" => v.trim
 
       case "reverse" => v.reverse
-      case "sorted"  => v.sorted
+      case "sorted"  => v.toSeq.sorted.unwrap
 
       case "init" => v.init
       case "tail" => v.tail
     }
   }
 
-  def applyFunc(params: Array[String], v: String): String = {
+  def applyFunc(params: Array[String], v: Any): String = {
     val func = params.head
+    val vStr = v.toString
 
     func match {
-      case "take"      => v.take(params.last.toInt)
-      case "takeRight" => v.takeRight(params.last.toInt)
-      case "drop"      => v.drop(params.last.toInt)
-      case "dropRight" => v.dropRight(params.last.toInt)
-
-      case "contains" =>
-        v.contains(params(1)).toString
+      case "take"      => vStr.take(params.last.toInt)
+      case "takeRight" => vStr.takeRight(params.last.toInt)
+      case "drop"      => vStr.drop(params.last.toInt)
+      case "dropRight" => vStr.dropRight(params.last.toInt)
 
       case "replace" =>
         val p = params(1).split(",")
-        v.replace(p.head, p.last)
+        vStr.replace(p.head, p.last)
 
       case "replaceAll" =>
         val p = params(1).split(",")
-        v.replaceAll(p.head, p.last)
+        vStr.replaceAll(p.head, p.last)
 
-      case "wordwrap" => {
+      case "wordwrap" =>
         var counter = 0
 
         var start = 0
         var take = params.last.toInt
 
         var a = ArrayBuffer[String]()
-        while (counter <= v.length) {
-          a += v.substring(start, start + take)
+        while (counter <= vStr.length) {
+          a += vStr.substring(start, start + take)
           start += take
 
           counter += start
         }
 
         a.mkString("</br>")
-      }
+
+      case "date" =>
+        val sdf = new SimpleDateFormat(params.last)
+        sdf.format(v)
+
     }
   }
 }
