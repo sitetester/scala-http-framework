@@ -1,16 +1,12 @@
 package app.controller
 
+import framework.http.controller.AbstractController
 import framework.http.request.Request
 import framework.http.response.Response
 
-object BlogController {
-
-  def index(): String = {
-    "<h1>Blog page</h1>"
-  }
+object BlogController extends AbstractController {
 
   def slugLower(request: Request): Response = {
-
     Response(
       s"<h1>e.g Blog ***slugLower*** page</h1>" +
         s"uri = ${request.uri}<br/>"
@@ -50,5 +46,4 @@ object BlogController {
         s"uriParam(id2) = ${request.uriParam("id2")}<br/>"
     )
   }
-
 }

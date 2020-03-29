@@ -5,7 +5,6 @@ import app.config.routing.ScalaRouting
 import framework.http.request.Request
 import framework.http.response.Response
 
-import scala.io.Source
 import scala.util.control._
 
 object RoutingManager {
@@ -78,8 +77,8 @@ object RoutingManager {
     var response: Response = Response()
 
     if (route.controller.contains("framework")) {
-      val filename = "src/main/scala/app/public/error/404.html"
-      val source = Source.fromFile(filename)
+      val filename = Config.appPublicPath + "error/404.html"
+      val source = io.Source.fromFile(filename)
       val view = source.getLines.mkString
       source.close()
 

@@ -14,8 +14,10 @@ case class Response(data: String = "",
   val STATUS_BAD_REQUEST = 400
   val STATUS_NOT_FOUND = 404
   val STATUS_INTERNAL_SERVER_ERROR = 500
+
   val contentTypeJson: String = "application/json"
   val contentTypeXml: String = "application/xml"
+
   var _status: Int = 200
 
   // var cookie: Cookie

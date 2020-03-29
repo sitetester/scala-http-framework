@@ -50,14 +50,12 @@ class Request(in: BufferedReader) {
   }
 
   def method: String = _method
-
   def method(method: String): Request = {
     _method = method
     this
   }
 
   def uri: String = _uri
-
   def uri(uri: String): Request = {
     _uri = uri
     this
@@ -70,8 +68,19 @@ class Request(in: BufferedReader) {
     this
   }
 
-  def uriParam(param: String): String = {
-    uriParams.filter(_._1 == param).head._2
+  def uriParam(name: String): String = {
+    uriParams.foreach(tuple => {
+      val param = tuple._1
+
+      if (!param.contains("\\[")) {
+        return tuple._2
+      } else {
+        val i = param.indexOf("(")
+        return param.substring(0, i)
+      }
+    })
+
+    ""
   }
 
   def uriParams: Seq[(String, String)] = {
@@ -165,14 +174,12 @@ class Request(in: BufferedReader) {
   }
 
   def isHttps: Boolean = _isHttps
-
   def isHttps(isHttps: Boolean): Request = {
     _isHttps = isHttps
     this
   }
 
   def remoteUser: String = _remoteUser
-
   def remoteUser(remoteUser: String): Request = {
     _remoteUser = remoteUser
     this

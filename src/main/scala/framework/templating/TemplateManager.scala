@@ -3,6 +3,7 @@ package framework.templating
 import java.text.SimpleDateFormat
 
 import app.config.Config
+import framework.http.request.Request
 import framework.http.response.Response
 
 import scala.collection.mutable.ArrayBuffer
@@ -50,14 +51,19 @@ object TemplateManager {
   def handleDot(tpl: String, target: String, v: Any): String = {
     val key = target.split("\\.").last
 
-    val rs = v.getClass.getDeclaredFields.map(f => {
+    if (v.isInstanceOf[Request]) {
+      val m = v.getClass.getDeclaredMethod(key)
+      m.setAccessible(true)
+      val r = m.invoke(v)
+      m.setAccessible(false)
+      r.toString
+    } else {
+      val f = v.getClass.getDeclaredField(key)
       f.setAccessible(true)
       val r = (f.getName, f.get(v))
       f.setAccessible(false)
-      r
-    })
-
-    rs.filter(_._1 == key).head._2.toString
+      r._2.toString
+    }
   }
 
   def handlePipe(tpl: String, key: String, v: Any, part: String): String = {

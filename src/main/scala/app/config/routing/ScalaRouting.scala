@@ -8,6 +8,14 @@ object ScalaRouting extends RoutingFormat {
     var routes: Seq[ScalaRoute] = Seq()
 
     routes = routes :+ new ScalaRoute()
+      .path("/twig")
+      .controller("app.controller.TwigController::index")
+
+    routes = routes :+ new ScalaRoute()
+      .path("/")
+      .controller("app.controller.IndexController::index")
+
+    routes = routes :+ new ScalaRoute()
       .path("/blog/{slug([A-Z]+)}")
       .controller("app.controller.BlogController::slugUpper")
 
@@ -54,10 +62,6 @@ object ScalaRouting extends RoutingFormat {
     routes = routes :+ new ScalaRoute()
       .path("/headersTest")
       .controller("app.controller.IndexController::headersTest")
-
-    routes = routes :+ new ScalaRoute()
-      .path("/")
-      .controller("app.controller.IndexController::index")
 
     routes = routes :+ new ScalaRoute()
       .path("/requestTest")

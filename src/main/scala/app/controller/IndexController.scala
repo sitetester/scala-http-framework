@@ -6,10 +6,10 @@ import framework.http.response.Response
 
 object IndexController extends AbstractController {
 
-  def index(request: Request): Response = {
+  /*def index(request: Request): Response = {
     val fruits = Seq("Apple", "Orange", "Banana")
     Response(fruits.mkString(","))
-  }
+  }*/
 
   def redirect(request: Request): Unit = {
     // redirect("http://www.google.com")
@@ -82,7 +82,7 @@ object IndexController extends AbstractController {
 
   def renderTemplate(request: Request): Response = {
 
-    renderViewWithVars(
+    render(
       "blog/messages",
       Map(
         "msg" -> "I like Scala :)",
