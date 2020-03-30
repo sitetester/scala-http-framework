@@ -6,7 +6,6 @@ class MaxLength extends Constraint {
   private var _errMsg: String = "Required max Length: "
 
   override def value: Any = super.value
-
   def value(value: String): MaxLength = {
     _value = value
     this

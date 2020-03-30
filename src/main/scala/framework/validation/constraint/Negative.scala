@@ -5,7 +5,6 @@ class Negative extends Constraint {
   private var _errMsg: String = "Required digit, but found: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Negative = {
     _errMsg = errMsg
     this

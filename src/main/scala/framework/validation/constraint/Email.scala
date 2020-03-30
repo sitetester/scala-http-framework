@@ -5,7 +5,6 @@ class Email extends Constraint {
   private var _errMsg: String = "Invalid email: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Email = {
     _errMsg = errMsg
     this

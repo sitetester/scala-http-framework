@@ -5,7 +5,6 @@ class isAlpha extends Constraint {
   private var _errMsg: String = "Required alpha, but found: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): isAlpha = {
     _errMsg = errMsg
     this

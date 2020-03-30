@@ -8,7 +8,6 @@ class Date extends Constraint {
   private var _errMsg: String = "Couldn't format date "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Date = {
     _errMsg = errMsg
     this

@@ -5,7 +5,6 @@ class NotBlank extends Constraint {
   private var _errMsg: String = "Required not blank"
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): NotBlank = {
     _errMsg = errMsg
     this

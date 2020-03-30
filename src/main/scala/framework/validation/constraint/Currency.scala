@@ -7,7 +7,6 @@ class Currency extends Constraint {
   private var _errMsg: String = "Invalid currency: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Currency = {
     _errMsg = errMsg
     this

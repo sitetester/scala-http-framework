@@ -6,7 +6,6 @@ class EqualTo extends Constraint {
   private var _expected: String = ""
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): EqualTo = {
     _errMsg = errMsg
     this

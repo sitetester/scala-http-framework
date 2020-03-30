@@ -5,7 +5,6 @@ class isAlphaNumeric extends Constraint {
   private var _errMsg: String = "Required alphaNumeric, but found: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): isAlphaNumeric = {
     _errMsg = errMsg
     this

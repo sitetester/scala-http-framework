@@ -6,7 +6,6 @@ class DivisibleBy extends Constraint {
   private var _denominator: Int = 0
 
   private var _errMsg: String = ""
-
   def errMsg: String = _errMsg
 
   def errMsg(errMsg: String): DivisibleBy = {

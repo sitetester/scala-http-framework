@@ -6,7 +6,6 @@ class Choice extends Constraint {
   private var _choice: Seq[Any] = Seq()
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Constraint = {
     _errMsg = errMsg
     this

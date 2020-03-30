@@ -5,7 +5,6 @@ class Url extends Constraint {
   private var _errMsg: String = "Required digit, but found: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Url = {
     _errMsg = errMsg
     this

@@ -5,7 +5,6 @@ class NegativeOrZero extends Constraint {
   private var _errMsg: String = "Required digit, but found: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): NegativeOrZero = {
     _errMsg = errMsg
     this

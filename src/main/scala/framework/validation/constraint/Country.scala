@@ -8,7 +8,6 @@ class Country extends Constraint {
   private var _errMsg: String = "Invalid country: "
 
   def errMsg: String = _errMsg
-
   def errMsg(errMsg: String): Country = {
     _errMsg = errMsg
     this
