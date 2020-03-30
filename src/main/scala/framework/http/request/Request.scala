@@ -62,7 +62,6 @@ class Request(in: BufferedReader) {
   }
 
   def route: String = _route
-
   def route(route: String): Request = {
     _route = route
     this

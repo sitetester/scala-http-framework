@@ -7,6 +7,8 @@ class ScalaRoute extends scala.annotation.StaticAnnotation {
   private var _methods: Array[String] = Array("GET")
   private var _schemes: Array[String] = Array("http", "https")
 
+  def path: String = _path
+
   def path(path: String): ScalaRoute = {
     _path = path
     this
@@ -17,10 +19,14 @@ class ScalaRoute extends scala.annotation.StaticAnnotation {
     this
   }
 
+  def methods: Array[String] = _methods
+
   def methods(methods: Array[String]): ScalaRoute = {
     _methods = methods
     this
   }
+
+  def schemes: Array[String] = _schemes
 
   def schemes(schemes: Array[String]): ScalaRoute = {
     _schemes = schemes
@@ -33,9 +39,4 @@ class ScalaRoute extends scala.annotation.StaticAnnotation {
 
   def controller: String = _controller
 
-  def path: String = _path
-
-  def methods: Array[String] = _methods
-
-  def schemes: Array[String] = _schemes
 }

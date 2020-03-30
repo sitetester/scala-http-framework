@@ -28,7 +28,7 @@ object TemplateManager {
       val pattern = key.toString + ".+}"
       val regex = pattern.r
       var target = regex.findFirstIn(tpl).getOrElse("")
-      var v = vars(key)
+      val v = vars(key)
 
       if (target != "") {
         target = target.init
@@ -45,7 +45,24 @@ object TemplateManager {
       }
     })
 
+    var result = ""
+    "\\{\\{\\s?+(.+)\\((.+)\\)\\s?+\\}\\}".r
+      .findAllIn(tpl)
+      .matchData
+      .foreach { m =>
+        val expression = m.group(0)
+        result = handleFuncWithoutPipe(m.group(1), m.group(2))
+        tpl = tpl.replace(expression, result)
+
+      }
+
     Response(tpl, 200, Seq(("Content-Type", "text/html; charset=UTF-8")))
+  }
+
+  def handleFuncWithoutPipe(func: String, arg: String): String = {
+    func match {
+      case "asset" => "http://localhost:8081/public/" + arg
+    }
   }
 
   def handleDot(tpl: String, target: String, v: Any): String = {

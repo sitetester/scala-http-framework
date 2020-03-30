@@ -8,6 +8,10 @@ object ScalaRouting extends RoutingFormat {
     var routes: Seq[ScalaRoute] = Seq()
 
     routes = routes :+ new ScalaRoute()
+      .path("/public")
+      .controller("framework.http.controller.PublicController::index")
+
+    routes = routes :+ new ScalaRoute()
       .path("/twig")
       .controller("app.controller.TwigController::index")
 

@@ -76,14 +76,14 @@ object RoutingManager {
   def resolveRoute(route: ScalaRoute, request: Request): Response = {
     var response: Response = Response()
 
-    if (route.controller.contains("framework")) {
+    /*if (route.controller.contains("framework")) {
       val filename = Config.appPublicPath + "error/404.html"
       val source = io.Source.fromFile(filename)
       val view = source.getLines.mkString
       source.close()
 
       return Response(view)
-    }
+    }*/
 
     val controllerParts = route.controller.split("::")
     val controller = controllerParts.head
