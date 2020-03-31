@@ -51,6 +51,10 @@ object ScalaRouting extends RoutingFormat {
       .path("/renderTemplate")
       .controller("app.controller.IndexController::renderTemplate")
 
+    routes = routes :+ new ScalaRoute()
+      .path("/headersTest")
+      .controller("app.controller.IndexController::headersTest")
+
     /*
     routes = routes :+ new ScalaRoute()
       .path("/session/get")
@@ -63,9 +67,7 @@ object ScalaRouting extends RoutingFormat {
       .path("/postTest")
       .controller("app.controller.IndexController::postTest")
 
-    routes = routes :+ new ScalaRoute()
-      .path("/headersTest")
-      .controller("app.controller.IndexController::headersTest")
+
 
     routes = routes :+ new ScalaRoute()
       .path("/requestTest")

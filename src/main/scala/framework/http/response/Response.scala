@@ -2,7 +2,7 @@ package framework.http.response
 
 case class Response(data: String = "",
                     code: Int = 200,
-                    headers: Seq[(String, String)] = Seq()) {
+                    _rsHeaders: Seq[(String, String)] = Seq()) {
 
   val httpVersion = "HTTP/1.1"
 
@@ -19,12 +19,9 @@ case class Response(data: String = "",
   val contentTypeXml: String = "application/xml"
 
   var _status: Int = 200
+  var _headers: Seq[(String, String)] = _rsHeaders
 
-  // var cookie: Cookie
-
-  // val cookies
-  // val cache
-  var _headers: Seq[(String, String)] = Seq()
+  // var _cookie: Cookie
 
   def status: Int = _status
 
@@ -33,10 +30,17 @@ case class Response(data: String = "",
     this
   }
 
-  /*def headers: Headers = Headers(_headers)
-  def headers_=(headers: Seq[(String, String)]): Unit = {
+  def headers: Seq[(String, String)] = _headers
+
+  def headers(headers: Seq[(String, String)]): Response = {
     _headers = headers
-  }*/
+    this
+  }
+
+  def addHeader(header: (String, String)): Response = {
+    _headers = _headers :+ header
+    this
+  }
 
   def sendRedirect(location: String, code: Int = 301): Response = {
     val str =

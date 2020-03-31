@@ -13,11 +13,11 @@ object Server extends App {
   val port = 8081
 
   try {
-    val serverConnect = new ServerSocket(port)
+    val serverSocket = new ServerSocket(port)
     println(s"Server started at port $port")
 
     while (true) {
-      val clientSocket = serverConnect.accept
+      val clientSocket = serverSocket.accept
 
       val thread = new Thread {
 
@@ -39,6 +39,8 @@ object Server extends App {
 
           val request = RequestParserReadLine.parseRequest(in, msgBuffer.toSeq)
           val response = RequestHandler.handleRequest(request)
+
+          response.addHeader("cache-control", "no-cache")
 
           send(in, out, response)
         }
