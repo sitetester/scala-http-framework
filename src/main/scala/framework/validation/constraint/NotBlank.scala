@@ -18,7 +18,7 @@ class NotBlank extends Constraint {
   def isValid: Boolean = {
     val v = _value.toString.trim.length > 0
     if (!v) {
-      _errMsg = _errMsg + _value
+      _errMsg = _errMsg
     }
     v
   }

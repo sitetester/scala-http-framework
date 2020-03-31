@@ -2,7 +2,7 @@ package framework.validation.constraint
 
 class Url extends Constraint {
 
-  private var _errMsg: String = "Required digit, but found: "
+  private var _errMsg: String = "Required URL, but found: "
 
   def errMsg: String = _errMsg
   def errMsg(errMsg: String): Url = {
@@ -16,16 +16,12 @@ class Url extends Constraint {
   }
 
   def isValid: Boolean = {
-    true
-  }
-
-  /*def isValid: Boolean = {
-    val pattern = "[0-9]+"
-    val v = _value.matches(pattern)
+    val pattern = "http(s)?://(www)?.[a-z]+.com"
+    val v = _value.toString.matches(pattern)
     if (!v) {
       _errMsg = _errMsg + _value
     }
     v
-  }*/
+  }
 
 }

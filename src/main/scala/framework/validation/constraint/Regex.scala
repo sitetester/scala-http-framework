@@ -2,11 +2,18 @@ package framework.validation.constraint
 
 class Regex extends Constraint {
 
-  private var _errMsg: String = "Required digit, but found: "
+  protected var _pattern: String = ""
+  private var _errMsg: String = ""
 
   def errMsg: String = _errMsg
+
   def errMsg(errMsg: String): Regex = {
     _errMsg = errMsg
+    this
+  }
+
+  def pattern(pattern: String): Regex = {
+    _pattern = pattern
     this
   }
 
@@ -16,16 +23,11 @@ class Regex extends Constraint {
   }
 
   def isValid: Boolean = {
-    true
-  }
-
-  /*def isValid: Boolean = {
-    val pattern = "[0-9]+"
-    val v = _value.matches(pattern)
+    val v = _value.toString.matches(_pattern)
     if (!v) {
-      _errMsg = _errMsg + _value
+      _errMsg = s"${_value} doesn't match pattern (${_pattern})"
     }
     v
-  }*/
+  }
 
 }

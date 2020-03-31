@@ -2,11 +2,18 @@ package framework.validation.constraint
 
 class NotEqualTo extends Constraint {
 
-  private var _errMsg: String = "Required digit, but found: "
+  protected var _expected: String = ""
+  private var _errMsg: String = ""
 
   def errMsg: String = _errMsg
+
   def errMsg(errMsg: String): NotEqualTo = {
     _errMsg = errMsg
+    this
+  }
+
+  def expected(expected: String): NotEqualTo = {
+    _expected = expected
     this
   }
 
@@ -16,16 +23,11 @@ class NotEqualTo extends Constraint {
   }
 
   def isValid: Boolean = {
-    true
-  }
-
-  /*def isValid: Boolean = {
-    val pattern = "[0-9]+"
-    val v = _value.matches(pattern)
+    val v = _value.equals(_expected)
     if (!v) {
-      _errMsg = _errMsg + _value
+      _errMsg = s"Expected (${_expected}), but got (${_value})"
     }
     v
-  }*/
+  }
 
 }
