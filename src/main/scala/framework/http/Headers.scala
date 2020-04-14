@@ -13,25 +13,4 @@ case class Headers(headers: Seq[(String, String)] = Seq()) {
   def headerExists(header: String): Boolean = {
     headers.count(_._1 == header) > 0
   }
-
-  def acceptableContentTypes: Array[String] = {
-    // TODO
-    Array("")
-  }
-
-  def languages: Array[String] = {
-    // TODO
-    Array("")
-  }
-
-  def charsets: Array[String] = {
-    // TODO
-    Array("")
-  }
-
-  def encodings: Array[String] = {
-    // TODO
-    Array("")
-  }
-
 }
