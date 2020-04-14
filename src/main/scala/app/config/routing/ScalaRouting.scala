@@ -28,7 +28,7 @@ object ScalaRouting extends RoutingFormat {
       .controller("app.controller.BlogController::slugLower")
 
     routes = routes :+ new ScalaRoute()
-      .path("/blog/{id([0-9])}")
+      .path("/blog/{id([0-9])}") // CAUTION, no +
       .controller("app.controller.BlogController::idRoute")
 
     routes = routes :+ new ScalaRoute()
@@ -36,7 +36,7 @@ object ScalaRouting extends RoutingFormat {
       .controller("app.controller.BlogController::idRoute100")
 
     routes = routes :+ new ScalaRoute()
-      .path("/blog/{id1}/{id2}") // put regex to appy restrictions and make it narrow/explicit
+      .path("/blog/{id1}/{id2}") // put regex to apply restrictions and make it narrow/explicit
       .controller("app.controller.BlogController::idRoute12")
 
     routes = routes :+ new ScalaRoute()
@@ -66,8 +66,6 @@ object ScalaRouting extends RoutingFormat {
     routes = routes :+ new ScalaRoute()
       .path("/postTest")
       .controller("app.controller.IndexController::postTest")
-
-
 
     routes = routes :+ new ScalaRoute()
       .path("/requestTest")

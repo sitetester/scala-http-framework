@@ -24,7 +24,6 @@ object RequestParser {
   private def parseRequestLine(requestLine: String,
                                request: Request): Request = {
     val requestLineParts = requestLine.split(" ")
-    requestLineParts.foreach(println(_))
 
     request
       .method(requestLineParts.head)
@@ -36,9 +35,10 @@ object RequestParser {
                            request: Request): Request = {
     val headerLines = requestLines.drop(1).filter(line => line.length > 0)
 
-    val headers = headerLines.map(headers => {
-      val kv = headers.split(":")
-      (kv.head, kv.tail.mkString)
+    val headers = headerLines.map(header => {
+      val i = header.indexOf(":")
+      val h = header.substring(0, i)
+      (h, header.substring(i + 1, header.length).trim)
     })
 
     request.headers(headers)

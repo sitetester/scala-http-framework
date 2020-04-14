@@ -11,7 +11,7 @@ object TwigController extends AbstractController {
   def index(request: Request): Response = {
     val u = User("john", "demo")
 
-    render("twig/index", Map("request" -> request))
+    render("twig/index", Map("msg" -> "hi"))
   }
 
 }

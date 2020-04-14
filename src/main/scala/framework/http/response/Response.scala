@@ -1,32 +1,30 @@
 package framework.http.response
 
-case class Response(data: String = "",
-                    code: Int = 200,
-                    _rsHeaders: Seq[(String, String)] = Seq()) {
+case class Response(rsData: String = "",
+                    rsCode: Int = 200,
+                    rsHeaders: Seq[(String, String)] = Seq()) {
 
   val httpVersion = "HTTP/1.1"
 
-  val statusMap: Seq[(Int, String)] = Seq((200, "Success"))
-  val STATUS_SUCCESS = 200
-  val STATUS_CREATED = 201
-  val STATUS_MOVED_PERMANENTLY = 301
-  val STATUS_MOVED_TEMPORARILY = 302
-  val STATUS_BAD_REQUEST = 400
-  val STATUS_NOT_FOUND = 404
-  val STATUS_INTERNAL_SERVER_ERROR = 500
-
-  val contentTypeJson: String = "application/json"
-  val contentTypeXml: String = "application/xml"
-
   var _status: Int = 200
-  var _headers: Seq[(String, String)] = _rsHeaders
+  var _headers: Seq[(String, String)] = rsHeaders
 
   // var _cookie: Cookie
 
-  def status: Int = _status
+  private var _data: String = rsData
+  private var _code: Int = rsCode
 
-  def status(status: Int): Response = {
-    _status = status
+  def code: Int = _code
+
+  def code(code: Int): Response = {
+    _code = code
+    this
+  }
+
+  def data: String = _data
+
+  def data(data: String): Response = {
+    _data = data
     this
   }
 

@@ -2,7 +2,6 @@ package framework.templating
 
 import java.text.SimpleDateFormat
 
-import app.config.Config
 import framework.http.request.Request
 import framework.http.response.Response
 
@@ -12,9 +11,7 @@ import scala.reflect.io.File
 
 object TemplateManager {
 
-  def render(view: String, vars: Map[String, Any] = Map()): Response = {
-
-    val fullPath = Config.appViewsPath + view + ".html"
+  def render(fullPath: String, vars: Map[String, Any] = Map()): Response = {
     val f = File(fullPath)
     if (!f.exists) {
       throw new Exception(s"Template path doesn't exists $fullPath")
@@ -25,13 +22,13 @@ object TemplateManager {
     source.close()
 
     vars.keys.foreach(key => {
-      val pattern = key.toString + ".+}"
+      val pattern = key.toString + ".+}}"
       val regex = pattern.r
       var target = regex.findFirstIn(tpl).getOrElse("")
       val v = vars(key)
 
       if (target != "") {
-        target = target.init
+        target = target.replace("}}", "").trim
 
         if (target.contains("|")) {
           val parts = target.split("\\|").drop(1)
@@ -41,28 +38,20 @@ object TemplateManager {
 
         } else if (target.contains(".")) {
           tpl = handleDot(tpl, target.trim, v)
+
+        } else {
+          var result = "\\{\\{\\s?+(.+)(\\((.+)\\))?\\s?+\\}\\}".r
+            .findAllIn(tpl)
+            .matchData
+            .foreach { m =>
+              val expression = m.group(0)
+              tpl = tpl.replace(expression, v.toString)
+            }
         }
       }
     })
 
-    var result = ""
-    "\\{\\{\\s?+(.+)\\((.+)\\)\\s?+\\}\\}".r
-      .findAllIn(tpl)
-      .matchData
-      .foreach { m =>
-        val expression = m.group(0)
-        result = handleFuncWithoutPipe(m.group(1), m.group(2))
-        tpl = tpl.replace(expression, result)
-
-      }
-
     Response(tpl, 200, Seq(("Content-Type", "text/html; charset=UTF-8")))
-  }
-
-  def handleFuncWithoutPipe(func: String, arg: String): String = {
-    func match {
-      case "asset" => "http://localhost:8081/public/" + arg
-    }
   }
 
   def handleDot(tpl: String, target: String, v: Any): String = {
@@ -89,21 +78,37 @@ object TemplateManager {
     if (!part.contains("(")) {
       val filterAppliedStr = applyFilter(v.toString, part)
 
-      val patternStr = "\\{\\s?+" + key + "\\|" + part + "\\s?+\\}"
-      println(patternStr)
-
+      val patternStr = "\\{\\{\\s?+" + key + "\\|" + part + "\\s?+\\}\\}"
       tplUpdated = tpl.replaceAll(patternStr, filterAppliedStr)
     } else {
       val params = part.replace(")", "").split("\\(")
       val filterAppliedStr = applyFunc(params, v)
 
-      val patternStr = "\\{\\s?+" + key + "\\|" + params.head + "\\(" + params.last + "\\)" + "\\s?+\\}"
-      println(patternStr)
+      val patternStr = "\\{\\{\\s?+" + key + "\\|" + params.head + "\\(" + params.last + "\\)" + "\\s?+\\}\\}"
 
       tplUpdated = tpl.replaceAll(patternStr, filterAppliedStr)
     }
 
     tplUpdated
+  }
+
+  def applyFilter(v: String, func: String): String = {
+
+    func match {
+      case "upper"      => v.toUpperCase
+      case "lower"      => v.toLowerCase
+      case "capitalize" => v.capitalize
+
+      case "first" => v.head.toString
+      case "last"  => v.last.toString
+
+      case "length" => v.length.toString
+
+      case "trim" => v.trim
+
+      case "reverse" => v.reverse
+      case "sorted"  => v.toSeq.sorted.unwrap
+    }
   }
 
   /*def applyTest(): Unit = {
@@ -113,31 +118,6 @@ object TemplateManager {
         v.contains(params(1)).toString
     }
   }*/
-
-  def applyFilter(v: String, func: String): String = {
-
-    func match {
-      case "head"  => v.head.toString
-      case "first" => v.head.toString
-
-      case "last" => v.last.toString
-
-      case "length" => v.length.toString
-      case "size"   => v.length.toString
-
-      case "upper"      => v.toUpperCase
-      case "lower"      => v.toLowerCase
-      case "capitalize" => v.capitalize
-
-      case "trim" => v.trim
-
-      case "reverse" => v.reverse
-      case "sorted"  => v.toSeq.sorted.unwrap
-
-      case "init" => v.init
-      case "tail" => v.tail
-    }
-  }
 
   def applyFunc(params: Array[String], v: Any): String = {
     val func = params.head
@@ -176,7 +156,12 @@ object TemplateManager {
       case "date" =>
         val sdf = new SimpleDateFormat(params.last)
         sdf.format(v)
+    }
+  }
 
+  def handleFuncWithoutPipe(func: String, arg: String): String = {
+    func match {
+      case "asset" => "http://localhost:8081/public/" + arg
     }
   }
 }

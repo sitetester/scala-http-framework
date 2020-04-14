@@ -3,11 +3,11 @@ package framework.http.request
 import framework.http.response.Response
 import framework.routing.RoutingManager
 
-object RequestHandler {
+class RequestHandler(routingManager: RoutingManager) {
 
   def handleRequest(request: Request): Response = {
-    val route = RoutingManager.detectRoute(request)
 
-    RoutingManager.resolveRoute(route, request)
+    val route = routingManager.detectRoute(request)
+    routingManager.resolveRoute(route, request)
   }
 }

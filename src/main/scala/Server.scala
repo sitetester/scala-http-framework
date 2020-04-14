@@ -3,8 +3,10 @@ import java.net.ServerSocket
 import java.text.SimpleDateFormat
 import java.util.Date
 
-import framework.http.request.{RequestHandler, RequestParserReadLine}
+import app.config.routing.RoutingLoader
+import framework.http.request.{RequestHandler, RequestParser}
 import framework.http.response.Response
+import framework.routing.RoutingManager
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -37,10 +39,10 @@ object Server extends App {
             readLine = in.readLine()
           }
 
-          val request = RequestParserReadLine.parseRequest(in, msgBuffer.toSeq)
-          val response = RequestHandler.handleRequest(request)
-
-          response.addHeader("cache-control", "no-cache")
+          val request = RequestParser.parseRequest(in, msgBuffer.toSeq)
+          val routingManager = new RoutingManager(RoutingLoader.getConfigRoutes)
+          val response =
+            new RequestHandler(routingManager).handleRequest(request)
 
           send(in, out, response)
         }
@@ -55,14 +57,15 @@ object Server extends App {
   }
 
   def send(in: BufferedReader, out: PrintWriter, response: Response): Unit = {
-    out.println(s"""HTTP/1.1 ${response.status} Success""")
+    out.println(s"""HTTP/1.1 ${response.code} Success""")
 
     response.headers.foreach(h => {
       out.println(s"""${h._1}: ${h._2}""")
     })
 
     out.println("")
-    out.println(response.data)
+    out.println(response.rsData)
     in.close()
   }
+
 }

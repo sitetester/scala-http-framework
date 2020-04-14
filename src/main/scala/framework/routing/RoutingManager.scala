@@ -1,18 +1,15 @@
 package framework.routing
 
-import app.config.Config
-import app.config.routing.ScalaRouting
 import framework.http.request.Request
 import framework.http.response.Response
 
 import scala.util.control._
 
-object RoutingManager {
+class RoutingManager(routes: Seq[ScalaRoute]) {
 
   def detectRoute(request: Request): ScalaRoute = {
 
     val pathSegments = request.uri.split("/").drop(1)
-    val routes = getConfigRoutes
 
     val outloop = new Breaks
     val inloop = new Breaks
@@ -63,27 +60,8 @@ object RoutingManager {
     route
   }
 
-  private def getConfigRoutes: Seq[ScalaRoute] = {
-    val format = Config.routingFormat
-
-    var map: Map[String, RoutingFormat] = Map()
-    map += ("scala" -> ScalaRouting)
-
-    val rf = map.filter(_._1 == format).head._2
-    rf.asInstanceOf[RoutingFormat].getRoutes
-  }
-
   def resolveRoute(route: ScalaRoute, request: Request): Response = {
     var response: Response = Response()
-
-    /*if (route.controller.contains("framework")) {
-      val filename = Config.appPublicPath + "error/404.html"
-      val source = io.Source.fromFile(filename)
-      val view = source.getLines.mkString
-      source.close()
-
-      return Response(view)
-    }*/
 
     val controllerParts = route.controller.split("::")
     val controller = controllerParts.head
@@ -91,27 +69,17 @@ object RoutingManager {
 
     val args: Array[String] = Array()
 
-    /*if (route.path.contains("/auth/basic")) {
-      return BasicAuthentication.authenticate()
-    }*/
+    try {
+      val o = Class.forName(controller)
+    } catch {
+      case e: ClassNotFoundException =>
+        System.out.println(e.getMessage)
 
-    /*if (route.path.contains("{")) {
-      args = route.path
-        .split("/")
-        .filter(_.trim != "")
-        .filter(arg => arg.startsWith("{"))
-    }*/
-
-    /*val params = request.uri
-      .split("/")
-      .takeRight(args.length)
-      .map(arg => {
-        try {
-          arg.toInt
-        } catch {
-          case _: NumberFormatException => arg
-        }
-      })*/
+        val o = Class.forName("framework.http.controller.FrameworkController")
+        val m = o.getDeclaredMethod("controllerNotFound", classOf[Request])
+        response = m.invoke(o, request).asInstanceOf[Response]
+        return response
+    }
 
     val o = Class.forName(controller)
     if (args.length > 0) {

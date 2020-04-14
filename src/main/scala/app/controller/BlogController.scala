@@ -25,7 +25,8 @@ object BlogController extends AbstractController {
       s"<h1>e.g Blog page # x</h1>" +
         s"uri = ${request.uri}<br/>" +
         s"route = ${request.route}<br/>" +
-        s"uriParams = ${request.uriParams}<br/>"
+        s"uriParams = ${request.uriParams}<br/>" +
+        s"uriParamsWithoutRegex = ${request.uriParamsWithoutRegex.head}<br/>"
     )
   }
 

@@ -33,7 +33,7 @@ class Request(in: BufferedReader) {
   private var _formData = ""
   private var _postParams = ""
 
-  def bufferedReader: BufferedReader = in
+  // def bufferedReader: BufferedReader = in
 
   def remoteHost: String = _remoteHost
 
@@ -91,6 +91,25 @@ class Request(in: BufferedReader) {
         index += 1
         if (path.contains("{")) {
           val param = path.drop(1).dropRight(1)
+          val _uriParams = _uri.split("/").drop(1)
+          params = params :+ (param, _uriParams(index))
+        }
+      }
+    }
+
+    params
+  }
+
+  def uriParamsWithoutRegex: Seq[(String, String)] = {
+    var params: Seq[(String, String)] = Seq()
+
+    var index = -1
+    _route.split("/").drop(1).foreach {
+      case (path) => {
+        index += 1
+        if (path.contains("{")) {
+          var param = path.drop(1).dropRight(1)
+          param = param.substring(0, param.indexOf("("))
           val _uriParams = _uri.split("/").drop(1)
           params = params :+ (param, _uriParams(index))
         }
@@ -199,12 +218,19 @@ class Request(in: BufferedReader) {
 
   def formData: String = _formData
 
+  def getCookie(name: String): String = {
+    cookies.filter(_._1 == name).head._2
+  }
+
   // Example: https://php.uz/manual/en/function.http-parse-cookie.php
-  def cookies: Array[Array[String]] = {
+  def cookies: Array[(String, String)] = {
     headers
       .getHeader("Cookie")
       .split(";")
-      .map(kv => kv.split("=").map(_.trim))
+      .map(c => {
+        val s = c.split("=")
+        (s.head, s.tail.head)
+      })
   }
 
   def headers: Headers = Headers(_headers)
