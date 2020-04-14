@@ -1,15 +1,11 @@
 Based on Java sockets, Http Server is started on configured port. It handles each client in separate thread.  
 
 There is framework library added. It parses plain HTTP request from CURL.
-Code needs to be cleaned. This would be a continuous process as things become more clear with passage of time.
-
-Currently there are some empty classes provided. They will be functional later. 
-
 
 Features:
-- Routes are based on ScalaRoute.
+- Routes are based on custom ScalaRoute class
 - Views are loading with passed params
 - Request/Response objects are functional. We can see each one's functionality in their respective classes.
-- Unit tests added
-- Db access is provided
+- Unit tests added for Routing, Templating & Controller(s)
+- Db access is provided through custom QueryBuilder class
 - Templating is functional along with basic filters and functions
