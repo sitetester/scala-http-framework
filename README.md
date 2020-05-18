@@ -1,6 +1,6 @@
 Based on Java sockets, Http Server is started on configured port. It handles each client in separate thread.  
 
-There is framework library added. It parses plain HTTP request from CURL.
+There is a framework library inside. It parses plain HTTP request from CURL.
 
 Features:
 - Routes are based on custom ScalaRoute class
