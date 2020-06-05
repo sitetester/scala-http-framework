@@ -28,9 +28,7 @@ object Server extends App {
           println("\nNew connection opened at: " + time.format(new Date()))
 
           val out = new PrintWriter(clientSocket.getOutputStream, true)
-          val in = new BufferedReader(
-            new InputStreamReader(clientSocket.getInputStream)
-          )
+          val in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream))
           var msgBuffer: ArrayBuffer[String] = ArrayBuffer()
 
           var readLine = in.readLine()
