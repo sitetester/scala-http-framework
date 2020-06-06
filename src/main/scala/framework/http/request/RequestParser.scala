@@ -21,7 +21,7 @@ object RequestParser {
     request
   }
 
-  private def parseRequestLine(requestLine: String, request: Request): Request = {
+  private def parseRequestLine(requestLine: String, request: Request): Unit = {
     val requestLineParts = requestLine.split(" ")
 
     request
@@ -30,7 +30,7 @@ object RequestParser {
       .httpVersion(requestLineParts.last)
   }
 
-  private def parseHeaders(requestLines: Seq[String], request: Request): Request = {
+  private def parseHeaders(requestLines: Seq[String], request: Request): Unit = {
     val headerLines = requestLines.drop(1).filter(line => line.length > 0)
 
     val headers = headerLines.map(header => {
