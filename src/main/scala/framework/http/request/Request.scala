@@ -12,7 +12,7 @@ class Request(in: BufferedReader) {
   val METHOD_PUT = "PUT"
   val METHOD_DELETE = "DELETE"
 
-  // host
+  // remote
   private var _remoteHost = ""
   private var _remoteAddress = ""
   private var _remoteUser = ""
