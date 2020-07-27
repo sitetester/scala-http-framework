@@ -36,14 +36,12 @@ class Request(in: BufferedReader) {
   // def bufferedReader: BufferedReader = in
 
   def remoteHost: String = _remoteHost
-
   def remoteHost(remoteHost: String): Request = {
     _remoteHost = remoteHost
     this
   }
 
   def remoteAddress: String = _remoteAddress
-
   def remoteAddress(remoteAddress: String): Request = {
     _remoteAddress = remoteAddress
     this
