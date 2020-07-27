@@ -5,7 +5,6 @@ case class Response(rsData: String = "",
                     rsHeaders: Seq[(String, String)] = Seq()) {
 
   val httpVersion = "HTTP/1.1"
-
   var _status: Int = 200
   var _headers: Seq[(String, String)] = rsHeaders
 
@@ -15,21 +14,18 @@ case class Response(rsData: String = "",
   private var _code: Int = rsCode
 
   def code: Int = _code
-
   def code(code: Int): Response = {
     _code = code
     this
   }
 
   def data: String = _data
-
   def data(data: String): Response = {
     _data = data
     this
   }
 
   def headers: Seq[(String, String)] = _headers
-
   def headers(headers: Seq[(String, String)]): Response = {
     _headers = headers
     this
