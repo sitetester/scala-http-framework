@@ -178,11 +178,12 @@ class Request(in: BufferedReader) {
   }
 
   def httpVersion: String = _httpVersion
-
   def httpVersion(httpVersion: String): Request = {
     _httpVersion = httpVersion
     this
   }
+
+  def headers: Headers = Headers(_headers)
 
   def headers(headers: Seq[(String, String)]): Request = {
     _headers = headers
@@ -230,7 +231,5 @@ class Request(in: BufferedReader) {
         (s.head, s.tail.head)
       })
   }
-
-  def headers: Headers = Headers(_headers)
 
 }
