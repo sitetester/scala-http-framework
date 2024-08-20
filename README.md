@@ -1,3 +1,5 @@
+An attempt to write custom HTTP framework
+
 Based on Java sockets, Http Server is started on configured port. It handles each client in separate thread.  
 
 There is a framework library inside. It parses plain HTTP request from CURL.
